@@ -1,0 +1,112 @@
+#include <iostream>
+using namespace std;
+
+void solve() {
+    int N;
+    cin >> N;
+
+    long long ans = 0;
+
+    for (int i = 0; i < N; i++) {
+        long long x;
+        cin >> x;
+        ans += abs(x);
+    }
+
+    cout << ans << endl;
+}
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--)
+        solve();
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <string>
+#include <unordered_set>
+using namespace std;
+
+int main() {
+    string s;
+    cin >> s;
+
+    unordered_set<char> st;
+    int left = 0, ans = 0;
+
+    for(int right = 0; right < s.size(); right++) {
+        while(st.count(s[right])) {
+            st.erase(s[left]);
+            left++;
+        }
+
+        st.insert(s[right]);
+        ans = max(ans, right - left + 1);
+    }
+
+    cout << ans;
+    return 0;
+}
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+
+struct Edge {
+    int u, v, w;
+};
+
+int main() {
+    int N, M, K;
+    cin >> N >> M >> K;
+
+    vector<Edge> edges(M);
+
+    for(auto &e : edges)
+        cin >> e.u >> e.v >> e.w;
+
+    const long long INF = 1e18;
+    vector<long long> dp(N + 1, INF);
+
+    dp[1] = 0;
+
+    for(int i = 1; i <= K; i++) {
+        vector<long long> next = dp;
+
+        for(auto e : edges) {
+            if(dp[e.u] != INF)
+                next[e.v] = min(next[e.v], dp[e.u] + e.w);
+
+            if(dp[e.v] != INF)
+                next[e.u] = min(next[e.u], dp[e.v] + e.w);
+        }
+
+        dp = next;
+    }
+
+    if(dp[N] == INF)
+        cout << -1;
+    else
+        cout << dp[N];
+
+    return 0;
+}
